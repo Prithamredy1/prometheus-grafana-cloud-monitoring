@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: "TechCorp"
+    type: file
+    disableDeletion: false
+    options:
+      path: /var/lib/grafana/dashboards

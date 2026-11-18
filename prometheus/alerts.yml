@@ -1,0 +1,36 @@
+# Lab thresholds. "for" is kept short (1-2 min) so alerts can be demonstrated in a recording;
+# use longer windows (5m+) in real environments to avoid noise.
+groups:
+  - name: server-alerts
+    rules:
+      - alert: ExporterDown
+        expr: up{job="node_exporter"} == 0
+        for: 1m
+        labels: { severity: critical }
+        annotations:
+          summary: "Node Exporter cannot be scraped on {{ $labels.instance }}"
+      - alert: HighCPUUsage
+        expr: 100 * (1 - avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))) > 85
+        for: 2m
+        labels: { severity: warning }
+        annotations:
+          summary: "High CPU usage on {{ $labels.instance }}"
+          description: "CPU usage has stayed above 85% for 2 minutes."
+      - alert: HighMemoryUsage
+        expr: 100 * (1 - node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) > 90
+        for: 2m
+        labels: { severity: warning }
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+      - alert: LowDiskSpace
+        expr: 100 * (node_filesystem_avail_bytes{mountpoint="/", fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes{mountpoint="/", fstype!~"tmpfs|overlay"}) < 10
+        for: 2m
+        labels: { severity: critical }
+        annotations:
+          summary: "Less than 10% disk space free on {{ $labels.instance }}"
+      - alert: HighSystemLoad
+        expr: node_load1 / count by(instance) (count by(instance, cpu) (node_cpu_seconds_total)) > 1.5
+        for: 2m
+        labels: { severity: warning }
+        annotations:
+          summary: "1-minute load is above 1.5x CPU cores on {{ $labels.instance }}"

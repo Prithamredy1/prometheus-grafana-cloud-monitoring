@@ -1,0 +1,2 @@
+# Screenshots
+Use your own lab only, named like `04-prometheus-targets-up.png`, with a caption in the README. Suggested 20: Ubuntu info, Docker version, containers running, node metrics endpoint, Prometheus config, targets UP, CPU query, memory query, Grafana login (no password visible), datasource, dashboard overview, CPU / memory / disk / network / load panels, CPU stress graph, alert firing, exporter DOWN, exporter recovery.

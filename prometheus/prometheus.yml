@@ -10,10 +10,9 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9090"]
 
-  # Node Exporter runs on the VM's host network; the container reaches it via host-gateway.
-  # Installing Node Exporter directly on the VM instead? Use targets: ["localhost:9100"] when Prometheus is also native.
+  # Node Exporter runs on the VM's host network; set the target to your VM IP (run: ip a).
   - job_name: "node_exporter"
     static_configs:
-      - targets: ["host.docker.internal:9100"]
+      - targets: ["192.168.31.130:9100"]
         labels:
           instance: "ubuntu-lab-01"

@@ -1,8 +1,7 @@
-# Prometheus + Grafana Linux Server Monitoring Lab
+﻿# Prometheus + Grafana Linux Server Monitoring Lab
 
 A reproducible monitoring stack for one Ubuntu server: **Node Exporter** exposes host metrics, **Prometheus** scrapes, stores and alerts on them, and **Grafana** shows a provisioned dashboard. Everything starts with one `docker compose up`.
 
-> **Status:** configuration, dashboard JSON and documentation are written. Screenshots, the demo recording and alert test results are added after I run each phase in my own lab (see checklist).
 > This is a **local lab**, not a monitored cloud VM.
 
 ## Architecture
@@ -33,16 +32,48 @@ Server status, uptime, CPU / memory / disk gauges, CPU and memory history, netwo
 Recording: add the link in [recordings/demo-link.md](recordings/demo-link.md).
 
 ## Progress checklist
-- [ ] Ubuntu VM + Docker installed
-- [ ] Stack running, targets UP
-- [ ] Dashboard verified with real data
-- [ ] CPU load test captured
-- [ ] Exporter failure/recovery captured
-- [ ] Alerts seen firing in Prometheus
-- [ ] Screenshots added, demo recorded
+- [x] Ubuntu VM + Docker installed
+- [x] Stack running, targets UP
+- [x] Dashboard verified with real data
+- [x] CPU load test captured
+- [x] Exporter failure/recovery captured
+- [x] Alerts seen firing in Prometheus
+- [x] Screenshots added
+
+## Screenshots
+
+**Prometheus**
+
+![Targets UP](screenshots/01-prometheus/01-prometheus-targets-up.png)
+
+![CPU query](screenshots/01-prometheus/03-prometheus-cpu-query.png)
+
+**Grafana**
+
+![Data source](screenshots/03-grafana/05-grafana-datasource.png)
+
+![Dashboard overview](screenshots/04-dashboard/06-dashboard-overview.png)
+
+![Dashboard lower panels](screenshots/04-dashboard/06b-dashboard-lower.png)
+
+**Failure testing**
+
+![CPU test](screenshots/05-alert-testing/08-cpu-test-dashboard.png)
+
+![High CPU alert](screenshots/05-alert-testing/09-alert-high-cpu.png)
+
+![CPU recovery](screenshots/05-alert-testing/10-cpu-recovery.png)
+
+![Exporter down](screenshots/05-alert-testing/11-exporter-down-targets.png)
+
+![Exporter down alert](screenshots/05-alert-testing/13-alert-exporter-down.png)
+
+![Exporter recovery](screenshots/05-alert-testing/15-exporter-recovery-dashboard.png)
 
 ## Security
 No secrets are committed (`docker/.env` is git-ignored). Ports bind to `127.0.0.1` by default. Do not expose Grafana, Prometheus or Node Exporter to the internet without authentication and network restrictions.
 
 ## Limitations / next steps
 Single server, no Alertmanager, no log monitoring. Next: a second Linux target, Alertmanager notifications, a cloud VM.
+
+- [ ] Demo video recorded

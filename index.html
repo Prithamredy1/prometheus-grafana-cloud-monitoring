@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linux Server Monitoring Lab · Prometheus + Grafana</title>
+<meta name="description" content="Linux monitoring lab with Prometheus, Grafana, Node Exporter and Docker Compose: dashboard, alert rules and failure tests.">
+<style>
+:root{--ink:#14213a;--bg:#f5f6f8;--panel:#fff;--line:#d9dee6;--mute:#5a667a;--acc:#c2410c;--hero:#14213a;--heroink:#fff}
+@media (prefers-color-scheme:dark){:root{--ink:#e8ecf3;--bg:#0f1520;--panel:#171f2e;--line:#2a3447;--mute:#9aa7bd;--acc:#fb923c;--hero:#0a0f19;--heroink:#fff}}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:var(--acc)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{background:var(--hero);color:var(--heroink);padding:56px 0 48px}
+header p{max-width:640px;color:#c5cfdf;margin:12px 0 24px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:0}
+h2{font-size:24px;margin:0 0 6px}
+.btn{display:inline-block;padding:10px 18px;border-radius:6px;font-weight:600;text-decoration:none;margin:0 8px 8px 0;background:var(--acc);color:#fff}
+.btn.alt{background:transparent;border:1px solid #5b6a85;color:#fff}
+section{padding:44px 0 0}
+.sub{color:var(--mute);margin:0 0 20px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.flow div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px}
+.flow small{display:block;color:var(--mute)}
+.flow span{color:var(--acc);font-weight:700}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--mute)}
+figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+figure img{display:block;width:100%;height:auto}
+figcaption{padding:12px 16px;color:var(--mute);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none;margin:0}
+.chips li{background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:3px 14px;font-size:14px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+ul.tick{margin:0;padding-left:20px}
+footer{padding:48px 0;color:var(--mute);font-size:14px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <h1>Linux Server Monitoring Lab</h1>
+  <p>Prometheus, Grafana and Node Exporter running with Docker Compose on an Ubuntu Server VM. A provisioned dashboard, alert rules, and tested failure scenarios.</p>
+  <a class="btn" href="https://github.com/Prithamredy1/prometheus-grafana-cloud-monitoring">View on GitHub</a>
+  <a class="btn alt" href="#dashboard">See the dashboard</a>
+</div></header>
+
+<main class="wrap">
+<section>
+  <h2>How it works</h2>
+  <p class="sub">Metrics flow from the server to a dashboard every 15 seconds.</p>
+  <div class="flow">
+    <div>Ubuntu Server VM<small>CPU · RAM · disk · network</small></div><span>→</span>
+    <div>Node Exporter<small>port 9100 · /metrics</small></div><span>→</span>
+    <div>Prometheus<small>port 9090 · scrape, store, alert</small></div><span>→</span>
+    <div>Grafana<small>port 3000 · dashboard</small></div>
+  </div>
+</section>
+
+<section>
+  <div class="cards">
+    <div class="card"><h3>Collect</h3><p>Node Exporter exposes host metrics. Prometheus scrapes them every 15 seconds.</p></div>
+    <div class="card"><h3>Visualize</h3><p>An 11-panel Grafana dashboard loads automatically from code: status, uptime, CPU, memory, disk, network, load, disk I/O.</p></div>
+    <div class="card"><h3>Detect</h3><p>Five alert rules: exporter down, high CPU, high memory, low disk, high system load.</p></div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <h2>Dashboard</h2>
+  <p class="sub">Live data from the lab VM, with the target showing UP.</p>
+  <figure><img loading="lazy" src="screenshots/04-dashboard/06-dashboard-overview.png" alt="Grafana dashboard showing server status UP, CPU, memory and disk gauges, and network, load and disk I/O graphs">
+  <figcaption>TechCorp Linux Server Monitoring dashboard in Grafana.</figcaption></figure>
+</section>
+
+<section>
+  <h2>Failure tests</h2>
+  <p class="sub">The system was tested by creating real problems and checking that monitoring noticed.</p>
+  <div class="grid">
+    <figure><img loading="lazy" src="screenshots/05-alert-testing/08-cpu-test-dashboard.png" alt="CPU usage rising during a controlled load test"><figcaption>1. Controlled CPU load: usage climbs on the dashboard.</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/05-alert-testing/09-alert-high-cpu.png" alt="Prometheus alerts page showing HighCPUUsage"><figcaption>2. The HighCPUUsage alert goes pending, then firing.</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/05-alert-testing/11-exporter-down-targets.png" alt="Prometheus targets page with node_exporter DOWN"><figcaption>3. Node Exporter stopped: the target shows DOWN.</figcaption></figure>
+    <figure><img loading="lazy" src="screenshots/05-alert-testing/15-exporter-recovery-dashboard.png" alt="Dashboard back to UP after the exporter restarted"><figcaption>4. Exporter restarted: status returns to UP with a visible gap.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Stack</h2>
+  <ul class="chips" style="margin-top:12px">
+    <li>Prometheus 2.53</li><li>Grafana 11.2</li><li>Node Exporter 1.8</li><li>Docker Compose</li><li>PromQL</li><li>Ubuntu Server 24.04</li><li>VMware</li><li>YAML</li><li>Bash</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Scope</h2>
+  <p class="sub">What is built, and what is not.</p>
+  <div class="two">
+    <div class="card"><h3>Built and tested</h3><ul class="tick"><li>One-command setup with Docker Compose</li><li>Provisioned data source and dashboard</li><li>Alert rules visible in Prometheus</li><li>CPU load and exporter failure tests</li></ul></div>
+    <div class="card"><h3>Not included</h3><ul class="tick"><li>Alertmanager notifications</li><li>Multiple servers</li><li>Cloud-hosted monitoring</li></ul>
+    <p style="margin-top:10px">This is a local lab. The screenshots are from my own VM, so this page is a project showcase, not a live monitoring service.</p></div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">Built by Beem Sai Pritham Reddy · <a href="https://github.com/Prithamredy1/prometheus-grafana-cloud-monitoring">Source code and setup guide on GitHub</a></div></footer>
+</body>
+</html>

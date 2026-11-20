@@ -28,8 +28,6 @@ Server status, uptime, CPU / memory / disk gauges, CPU and memory history, netwo
 ## Failure tests
 `scripts/cpu-load.sh`, `scripts/memory-load.sh`, `scripts/exporter-failure-test.sh` - see [troubleshooting.md](documentation/troubleshooting.md).
 
-## Demo
-Recording: add the link in [recordings/demo-link.md](recordings/demo-link.md).
 
 ## Progress checklist
 - [x] Ubuntu VM + Docker installed
@@ -76,4 +74,3 @@ No secrets are committed (`docker/.env` is git-ignored). Ports bind to `127.0.0.
 ## Limitations / next steps
 Single server, no Alertmanager, no log monitoring. Next: a second Linux target, Alertmanager notifications, a cloud VM.
 
-- [ ] Demo video recorded
